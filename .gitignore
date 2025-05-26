@@ -22,6 +22,7 @@ pip-wheel-metadata/
 # Conda
 .conda/
 env/
+output_local/
 
 # Archivos de salida (ejemplo, podríamos añadir más después)
 *.csv

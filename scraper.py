@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import csv # Usamos este modulo para guardar datos en archivos .csv
+import os # Añade esta importación al inicio de tu scraper.py si no está
 
 # Por ahora voy a usar una URL de prueba para request luego agregare la url real de donde
 # quiero obtener los datos para el scraper 'https://quotes.toscrape.com/' es para pruebas
@@ -90,7 +91,7 @@ def extraes_citas_autores(html_content):
     return citas_extraidas  # Retornamos la lista de citas extraidas
 
 
-def guardar_datos_csv(datos, nombre_archivo='citas_extraidas.csv'):
+def guardar_datos_csv(datos, nombre_archivo_base='citas_extraidas.csv'):
     """
     Guarda una lista de diccionarios enun archivo CSV.
 
@@ -107,8 +108,20 @@ def guardar_datos_csv(datos, nombre_archivo='citas_extraidas.csv'):
     # Asumimos que todos los diccionarios tienen las mismas llaves.
     fieldnames = datos[0].keys()
     
+    # Definimos la ruta de salida dentro del contenedor
+    directorio_salida = "output" # Este es /app/output dentro del contenedor
+    # os.makedirs(directorio_salida, exist_ok=True) # Ya lo creamos en el Dockerfile
+                                                 # pero no está de más asegurarse si se corre localmente
+    
+    # Es mejor si importamos os para crear la carpeta si no existe (para ejecución local)
+    # y para unir rutas de forma segura
+    if not os.path.exists(directorio_salida):
+        os.makedirs(directorio_salida)
+
+    ruta_completa_archivo = os.path.join(directorio_salida, nombre_archivo_base)
+    
     try:
-        with open(nombre_archivo, 'w', newline='', encoding='utf-8') as csvfile:
+        with open(ruta_completa_archivo, 'w', newline='', encoding='utf-8') as csvfile:
             # 'w' para modo escritura.
             # newline='' para evitar filas vacias extra en Windows.
             # encodig='utf-8' para manejar caracteres especiales.
@@ -117,10 +130,10 @@ def guardar_datos_csv(datos, nombre_archivo='citas_extraidas.csv'):
             
             writer.writeheader() # Escribe la fila de encabezados
             writer.writerows(datos) # Escribe todas las filas de datos
-        
-        print(f'\nDatos guardados exitosamente en el archivo {nombre_archivo}')
+
+        print(f'\nDatos guardados exitosamente en el archivo {ruta_completa_archivo}')
     except IOError:
-        print(f'Error de E/S: No se pudo escribir en el archivo {nombre_archivo}')
+        print(f'Error de E/S: No se pudo escribir en el archivo {ruta_completa_archivo}')
     except Exception as e:
         print(f'Ocurrió un error al guardar los datos en CSV: {e}')
         

@@ -1,0 +1,22 @@
+# Ignorar el entorno virtual
+venv/
+.venv/
+
+# Ignorar la carpeta de Git
+.git/
+
+# Ignorar archivos de configuración de IDEs
+.vscode/
+.idea/
+
+# Ignorar el __pycache__
+__pycache__/
+
+# No necesitamos el Dockerfile ni .dockerignore dentro de la imagen
+Dockerfile
+.dockerignore
+
+# Archivos de salida generados localmente (si los hubiera)
+# No queremos copiar un CSV preexistente a la imagen
+*.csv 
+output/
