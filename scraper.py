@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import csv # Usamos este modulo para guardar datos en archivos .csv
 
 # Por ahora voy a usar una URL de prueba para request luego agregare la url real de donde
 # quiero obtener los datos para el scraper 'https://quotes.toscrape.com/' es para pruebas
@@ -88,6 +89,43 @@ def extraes_citas_autores(html_content):
     
     return citas_extraidas  # Retornamos la lista de citas extraidas
 
+
+def guardar_datos_csv(datos, nombre_archivo='citas_extraidas.csv'):
+    """
+    Guarda una lista de diccionarios enun archivo CSV.
+
+    Args:
+        datos (list): Una lista de diccionarios para guardar.
+        nombre_archivo (str, optional): El nombre del archivo CSV. 
+                                        Defaults to 'citas_extraidas.csv'.
+    """
+    if not datos:
+        print('No hay datos para guardar.')
+        return
+    
+    # Las llaves del primer diccionario se usaran como encabezados (fieldnames)
+    # Asumimos que todos los diccionarios tienen las mismas llaves.
+    fieldnames = datos[0].keys()
+    
+    try:
+        with open(nombre_archivo, 'w', newline='', encoding='utf-8') as csvfile:
+            # 'w' para modo escritura.
+            # newline='' para evitar filas vacias extra en Windows.
+            # encodig='utf-8' para manejar caracteres especiales.
+            
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            
+            writer.writeheader() # Escribe la fila de encabezados
+            writer.writerows(datos) # Escribe todas las filas de datos
+        
+        print(f'\nDatos guardados exitosamente en el archivo {nombre_archivo}')
+    except IOError:
+        print(f'Error de E/S: No se pudo escribir en el archivo {nombre_archivo}')
+    except Exception as e:
+        print(f'Ocurrió un error al guardar los datos en CSV: {e}')
+        
+        
+
 # ----- Bloque Principal para probar la funcion -----
 if __name__ == "__main__":
     print("Inciando el extractor de noticias...")
@@ -106,6 +144,9 @@ if __name__ == "__main__":
                 print(f'\nCita {i}:')
                 print(f' Texto: {cita_info["texto"]}')
                 print(f' Autor: {cita_info["autor"]}')
+                
+            # Llamamos a la nueva funcion para guardar los datos
+            guardar_datos_csv(lista_citas) # Podriamos cambiar nombre, pero lo dejamos por defecto
         
         else:
             print("\nNo se pudieron extraer citas de la página.")
