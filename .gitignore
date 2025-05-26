@@ -1,0 +1,29 @@
+# Entorno Virtual
+venv/
+.venv/
+
+# Archivos compilados de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archivos de IDEs (ejemplos, puedes añadir los tuyos)
+.vscode/
+.idea/
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de dependencia (si usas otros gestores)
+# Pip
+pip-wheel-metadata/
+# Conda
+.conda/
+env/
+
+# Archivos de salida (ejemplo, podríamos añadir más después)
+*.csv
+*.json
+# Si no quieres que los datos generados por el scraper se suban al repo
